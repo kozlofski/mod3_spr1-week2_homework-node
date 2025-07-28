@@ -8,7 +8,7 @@
   },
   {
     "id": "user001",
-    "username": "user1b",
+    "username": "user1",
     "password": "dupa123",
     "role": "user",
     "balance": 1000

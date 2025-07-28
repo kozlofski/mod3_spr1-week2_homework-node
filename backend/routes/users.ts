@@ -1,5 +1,8 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { parseCookies } from "../auth";
+import { getUserFromToken, generateToken } from "../auth";
+import { verifyUser } from "../db/user";
+import { parseBody } from "./helperMethods";
 
 export async function users(
   req: IncomingMessage,
@@ -14,7 +17,10 @@ export async function users(
     if (token === undefined) {
       throw new Error("no token");
     }
-    console.log(token);
+    console.log("token: ", token);
+    const user = getUserFromToken(token);
+
+    console.log(user);
     // const token = (req.headers.cookie || "").split("token=")[1];
     // if (!token) return res.writeHead(401).end("no token");
     // const user = verifyToken(token);
@@ -37,5 +43,36 @@ export async function users(
   } catch (error) {
     console.log(error);
     return res.writeHead(401).end("authorization failed");
+  }
+}
+
+export async function login(
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+) {
+  try {
+    const loginObjectFromForm = (await parseBody(req)) as {
+      username: string;
+      password: string;
+    };
+    const { username, password } = loginObjectFromForm;
+    const loggedUserId = await verifyUser(username, password);
+
+    if (loggedUserId === undefined) throw new Error("logowanie nieudane");
+
+    const token = generateToken(loggedUserId);
+    return res
+      .writeHead(200, {
+        "Set-Cookie": `token=${token}; Path=/users; HttpOnly`,
+        "content-type": "Application/json",
+      })
+      .end(`użytkownik ${username} zalogowany`);
+  } catch (error) {
+    console.log(error);
+    return res
+      .writeHead(401, {
+        "content-type": "Application/json",
+      })
+      .end(JSON.stringify({ error: "logowanie nieudane" }));
   }
 }
