@@ -1,0 +1,24 @@
+{
+  "name": "51_nodejs_homework",
+  "version": "1.0.0",
+  "description": "## Opis Projekt umożliwia rejestrację, logowanie, zarządzanie użytkownikami i samochodami oraz symulację zakupu samochodów.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "copyfiles -u 1 frontend/**/* dist/static && tsc && node --watch --watch-preserve-output --env-file=.env dist/index.js",
+    "server": "node --watch --env-file=.env dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.0.14",
+    "copyfiles": "^2.4.1"
+  },
+  "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcrypt": "^6.0.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

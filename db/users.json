@@ -1,0 +1,72 @@
+[
+  {
+    "id": "admin001",
+    "username": "admin",
+    "password": "admin123",
+    "role": "admin",
+    "balance": 10000
+  },
+  {
+    "id": "user001",
+    "username": "user1b",
+    "password": "dupa123",
+    "role": "user",
+    "balance": 1000
+  },
+  {
+    "id": "user018",
+    "username": "user2",
+    "password": "dupadupa",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user019",
+    "username": "user3",
+    "password": "dupadupa",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user020",
+    "username": "user5",
+    "password": "user1",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user021",
+    "username": "user7",
+    "password": "user1",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user022",
+    "username": "user8",
+    "password": "user1",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user023",
+    "username": "user9",
+    "password": "user1",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user024",
+    "username": "koza",
+    "password": "Dupa747",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user025",
+    "username": "user111",
+    "password": "dupadupa",
+    "role": "user",
+    "balance": 0
+  }
+]
