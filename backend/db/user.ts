@@ -1,3 +1,6 @@
+// this file probably needs to be smartly renamed
+// to avoid confusion with routes/users.ts
+
 import { User } from "../types";
 import path from "path";
 
@@ -10,7 +13,7 @@ export async function verifyUser(
   password: string
 ): Promise<string | undefined> {
   const usersArray = await getUsers();
-  if (usersArray === undefined) return undefined;
+  if (usersArray === null) return undefined;
   const foundUser: User | undefined = usersArray.find(
     (user: User) => user.username === username && user.password === password
   );
@@ -19,15 +22,24 @@ export async function verifyUser(
 
 // "private" helper methods:
 
-async function getUsers(): Promise<User[] | undefined> {
+async function getUsers(): Promise<User[] | null> {
   try {
-    const users = await fs.readFile(pathToUsers);
-    if (!users) return undefined;
-    // users is sometimes undefined and doesn't throw an error...
-    const usersArray = await JSON.parse(users.toString());
+    const usersArray = await getDataArray<User>(pathToUsers);
+    if (!usersArray) throw new Error("users data not available");
     return usersArray;
   } catch (error) {
     console.log(error);
-    return undefined;
+    return null;
+  }
+}
+
+async function getDataArray<T>(path: string): Promise<T[] | null> {
+  try {
+    const fileData = await fs.readFile(path);
+    const dataArray = JSON.parse(fileData.toString());
+    return dataArray;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }

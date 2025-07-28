@@ -21,9 +21,7 @@ export async function users(
     const user = getUserFromToken(token);
 
     console.log(user);
-    // const token = (req.headers.cookie || "").split("token=")[1];
-    // if (!token) return res.writeHead(401).end("no token");
-    // const user = verifyToken(token);
+
     // if (user.role === "admin") {
     //   const usersArray = await getUsers();
     //   return res.writeHead(200).end(JSON.stringify(usersArray));
