@@ -1,7 +1,15 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { parseBody } from "./helperMethods";
 
-import { carExists, createCar, getCars } from "../db/car";
+import {
+  carModelExists,
+  carExists,
+  carIsAvailable,
+  createCar,
+  getCars,
+} from "../db/car";
+import { getUserIdFromToken, parseCookies } from "../auth";
+import { getUser } from "../db/user";
 
 export async function addCar(
   req: IncomingMessage,
@@ -16,7 +24,7 @@ export async function addCar(
 
     console.log("Trying to create new car:", model, price);
 
-    if (await carExists(model))
+    if (await carModelExists(model))
       return res.writeHead(400).end(
         JSON.stringify({
           error: `samochód ${model} już istnieje w bazie`,

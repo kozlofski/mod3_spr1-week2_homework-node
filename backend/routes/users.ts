@@ -63,7 +63,7 @@ export async function login(
     const token = generateToken(loggedUserId);
     return res
       .writeHead(200, {
-        "Set-Cookie": `token=${token}; Path=/users; HttpOnly`,
+        "Set-Cookie": `token=${token}; Path=/; HttpOnly`,
         "content-type": "Application/json",
       })
       .end(JSON.stringify({ message: `użytkownik ${username} zalogowany` }));

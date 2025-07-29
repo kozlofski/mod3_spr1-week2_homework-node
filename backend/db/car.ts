@@ -10,6 +10,8 @@ import { getDataArray, writeDataArray } from "./jsondb";
 
 const pathToCars = path.join(__dirname, "../../db/cars.json");
 
+// CREATE
+// are these two functions need to be separate?
 export async function createCar(
   newCarModel: string,
   newCarPrice: string
@@ -64,11 +66,11 @@ export async function getCars(): Promise<Car[] | null> {
   }
 }
 
-export async function carExists(model: string): Promise<boolean> {
+export async function carModelExists(model: string): Promise<boolean> {
   try {
     const carsArray = await getCars();
     if (carsArray === null)
-      throw new Error("cars data not available in carExists()");
+      throw new Error("cars data not available in carModelExists()");
     if (carsArray.find((car) => car.model === model) !== undefined) return true;
   } catch (error) {
     console.log(error);
@@ -76,29 +78,49 @@ export async function carExists(model: string): Promise<boolean> {
   return false;
 }
 
-// // READ single User
-// export async function getUser(
-//   userId: string
-// ): Promise<PublicUser | undefined | null> {
-//   try {
-//     const usersArray = await getDataArray<User>(pathToUsers);
-//     if (!usersArray) throw new Error("users data not available");
+export async function carExists(id: string): Promise<boolean> {
+  try {
+    const carsArray = await getCars();
+    if (carsArray === null)
+      throw new Error("cars data not available in carExists()");
+    if (carsArray.find((car) => car.id === id) !== undefined) return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
 
-//     const user = usersArray.find((user) => user.id === userId);
-//     if (user === undefined) return undefined;
+export async function carIsAvailable(id: string): Promise<boolean> {
+  try {
+    const carsArray = await getCars();
+    if (carsArray === null)
+      throw new Error("cars data not available in carExists()");
+    if (
+      carsArray.find((car) => car.id === id && car.ownerId === null) !==
+      undefined
+    )
+      return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
 
-//     const publicUser: PublicUser = {
-//       id: user.id,
-//       username: user.username,
-//       role: user.role,
-//       balance: user.balance,
-//     };
-//     return publicUser;
-//   } catch (error) {
-//     console.log(error);
-//     return null;
-//   }
-// }
+// READ single Car
+export async function getCar(carId: string): Promise<Car | undefined | null> {
+  try {
+    const carsArray = await getDataArray<Car>(pathToCars);
+    if (!carsArray) throw new Error("cars data not available");
+
+    const car = carsArray.find((car) => car.id === `car-${carId}`);
+    if (car === undefined) return undefined;
+
+    return car;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
 // // === helper functions (private) ===
 

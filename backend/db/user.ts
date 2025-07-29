@@ -116,6 +116,10 @@ export async function getUser(
   }
 }
 
+// export async function updateUser(
+
+// )
+
 // === helper functions (private) ===
 // maybe move to separate module
 
