@@ -9,12 +9,11 @@ export function generateToken(userId: string): string {
   return token;
 }
 
-export function getUserFromToken(token: string): JwtPayload {
-  console.log("secret: ", SECRET);
-  const userPayload = jwt.verify(token, SECRET) as JwtPayload;
+export function getUserIdFromToken(token: string): string {
+  type userIdPayload = JwtPayload & { id: string };
+  const userPayload = jwt.verify(token, SECRET) as userIdPayload;
   console.log("Verify token: ", userPayload);
-  return userPayload;
-  // return null;
+  return userPayload.id;
 }
 
 // export function verifyToken(token: string) {

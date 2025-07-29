@@ -1,7 +1,7 @@
 // this file probably needs to be smartly renamed
 // to avoid confusion with routes/users.ts
 
-import { User } from "../types";
+import { PublicUser, User } from "../types";
 import path from "path";
 
 import fs from "fs/promises";
@@ -20,9 +20,8 @@ export async function verifyUser(
   return foundUser?.id;
 }
 
-// "private" helper methods:
-
-async function getUsers(): Promise<User[] | null> {
+// READ for User
+export async function getUsers(): Promise<User[] | null> {
   try {
     const usersArray = await getDataArray<User>(pathToUsers);
     if (!usersArray) throw new Error("users data not available");
@@ -33,6 +32,34 @@ async function getUsers(): Promise<User[] | null> {
   }
 }
 
+// READ single User
+export async function getUser(
+  userId: string
+): Promise<PublicUser | undefined | null> {
+  try {
+    const usersArray = await getDataArray<User>(pathToUsers);
+    if (!usersArray) throw new Error("users data not available");
+
+    const user = usersArray.find((user) => user.id === userId);
+    if (user === undefined) return undefined;
+
+    const publicUser: PublicUser = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      balance: user.balance,
+    };
+    return publicUser;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+// lower layer of abstraction - generic fn for CRUD interaction
+// with JSON files
+// in future to be replaced by real DB
+// or another layer there will be
 async function getDataArray<T>(path: string): Promise<T[] | null> {
   try {
     const fileData = await fs.readFile(path);
