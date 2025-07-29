@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "car-Z2xa2G",
+    "model": "Opel Insignia",
+    "price": 100000,
+    "ownerId": null
+  },
+  { "id": "car-De90he", "model": "Opel Astra", "price": 60000, "ownerId": null }
+]

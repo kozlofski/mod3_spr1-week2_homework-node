@@ -5,7 +5,7 @@ import { PublicUser, User, UserRole, ProductType } from "../types";
 import path from "path";
 import bcrypt from "bcrypt";
 
-import fs from "fs/promises";
+import { getDataArray, writeDataArray } from "./jsondb";
 
 const pathToUsers = path.join(__dirname, "../../db/users.json");
 
@@ -58,18 +58,8 @@ async function writeUser(
       balance: 0,
     };
     const updatedUsersArray = [...usersArray, newUser];
-    if (await !writeDataArray<User>(updatedUsersArray))
+    if (await !writeDataArray<User>(pathToUsers, updatedUsersArray))
       throw new Error("unable to write users in writeUser()");
-    return true;
-  } catch (error) {
-    console.log(error);
-  }
-  return false;
-}
-
-async function writeDataArray<T>(dataArray: T[]): Promise<boolean> {
-  try {
-    await fs.writeFile(pathToUsers, Buffer.from(JSON.stringify(dataArray)));
     return true;
   } catch (error) {
     console.log(error);
@@ -120,21 +110,6 @@ export async function getUser(
       balance: user.balance,
     };
     return publicUser;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
-// lower layer of abstraction - generic fn for CRUD interaction
-// with JSON files
-// in future to be replaced by real DB
-// or another layer there will be
-async function getDataArray<T>(path: string): Promise<T[] | null> {
-  try {
-    const fileData = await fs.readFile(path);
-    const dataArray = JSON.parse(fileData.toString());
-    return dataArray;
   } catch (error) {
     console.log(error);
     return null;

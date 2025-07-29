@@ -16,13 +16,6 @@ export function getUserIdFromToken(token: string): string {
   return userPayload.id;
 }
 
-// export function verifyToken(token: string) {
-//   const userPayload = jwt.verify(token, SECRET) as JwtPayload;
-//   console.log("Verify token: ", userPayload);
-//   return userPayload;
-//   // return jwt.verify(token, SECRET) as JwtPayload;
-// }
-
 // export function setAuthCookie(res: ServerResponse, token: string) {}
 
 export function parseCookies(

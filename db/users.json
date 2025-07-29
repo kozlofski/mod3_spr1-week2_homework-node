@@ -33,5 +33,12 @@
     "password": "dupadupa",
     "role": "user",
     "balance": 0
+  },
+  {
+    "id": "user-Xj.Htu",
+    "username": "user234",
+    "password": "dupadupa",
+    "role": "user",
+    "balance": 0
   }
 ]

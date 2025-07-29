@@ -5,6 +5,7 @@ import url from "url";
 
 import { getStaticFile, staticPaths } from "./routes/staticFiles";
 import { users, login, register } from "./routes/users";
+import { addCar } from "./routes/cars";
 
 const PORT = 3000;
 
@@ -31,8 +32,8 @@ const server = createServer(async (req, res) => {
   // if (method === "PUT" && pathName?.startsWith("/users/"))
   //   updateUser(req, res, pathName);
 
-  // // adding a new car
-  // if (method === "POST" && pathName === "/cars") addCar(req, res);
+  // adding a new car
+  if (method === "POST" && pathName === "/cars") addCar(req, res);
 });
 
 server.listen(PORT, () => {

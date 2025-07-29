@@ -107,38 +107,6 @@ export async function register(
       return res
         .writeHead(201)
         .end(JSON.stringify({ message: `Utworzono użytkownika ${username}` }));
-
-    // req.on("data", (chunk) => (body += chunk));
-    // req.on("end", async () => {
-    //   registerObject = await JSON.parse(body);
-    //   const { username, password } = registerObject;
-    //   // two same validation functions here for simplicity of testing
-    //   if (!validateUsername(username) || !validateUsername(password)) {
-    //     return res
-    //       .writeHead(401)
-    //       .end(JSON.stringify({ error: "walidacja niepomyślna" }));
-    //   }
-
-    //   if (await userExists(username))
-    //     return res
-    //       .writeHead(401)
-    //       .end(
-    //         JSON.stringify({ error: `użytkownik ${username} już istnieje` })
-    //       );
-
-    //   if (await addUser(username, password))
-    //     return res
-    //       .writeHead(201)
-    //       .end(
-    //         JSON.stringify({ message: `Utworzono użytkownika ${username}` })
-    //       );
-    //   else
-    //     return res
-    //       .writeHead(401)
-    //       .end(
-    //         JSON.stringify({ error: "Błąd przy tworzeniu nowego uzytkownika" })
-    //       );
-    // });
   } catch (error) {
     console.log(error);
   }
