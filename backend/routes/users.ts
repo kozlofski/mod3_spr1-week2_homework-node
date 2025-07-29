@@ -29,7 +29,7 @@ export async function users(
     const currentUser = await getUser(currentUserId);
     console.log("Current user: ", currentUser);
     if (currentUser === undefined) throw new Error("user not found");
-    if (currentUser === null) throw new Error("unavailable to get user data");
+    if (currentUser === null) throw new Error("unable to get user data");
 
     if (currentUser.role === "admin") {
       const usersArray = await getUsers();

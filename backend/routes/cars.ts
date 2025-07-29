@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { parseBody } from "./helperMethods";
 
-import { carExists, createCar } from "../db/car";
+import { carExists, createCar, getCars } from "../db/car";
 
 export async function addCar(
   req: IncomingMessage,
@@ -35,4 +35,21 @@ export async function addCar(
       })
       .end(JSON.stringify({ error: "dodawanie samochodu nieudane" }));
   }
+}
+
+export async function cars(
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+) {
+  try {
+    const carsArray = await getCars();
+    if (carsArray === null)
+      return res
+        .writeHead(500, { "content-type": "Application/json" })
+        .end(JSON.stringify({ error: "cars data unavailable" }));
+
+    return res
+      .writeHead(200, { "content-type": "Application/json" })
+      .end(JSON.stringify(carsArray));
+  } catch (error) {}
 }

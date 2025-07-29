@@ -5,5 +5,11 @@
     "price": 100000,
     "ownerId": null
   },
-  { "id": "car-De90he", "model": "Opel Astra", "price": 60000, "ownerId": null }
+  {
+    "id": "car-De90he",
+    "model": "Opel Astra",
+    "price": 60000,
+    "ownerId": null
+  },
+  { "id": "car-7ix5Ma", "model": "Opel Adam", "price": 70000, "ownerId": null }
 ]
