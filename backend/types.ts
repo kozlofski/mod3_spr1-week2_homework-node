@@ -2,9 +2,11 @@ export interface User {
   id: string;
   username: string;
   password: string; // Dla uproszczenia przechowujemy hasło w postaci jawnej (w praktyce należy stosować hashowanie)
-  role: "admin" | "user";
+  role: UserRole;
   balance: number;
 }
+
+export type UserRole = "user" | "admin";
 
 export interface Car {
   id: string;
@@ -12,5 +14,7 @@ export interface Car {
   price: number;
   ownerId: string;
 }
+
+export type ProductType = "car";
 
 export type PublicUser = Omit<User, "password">;

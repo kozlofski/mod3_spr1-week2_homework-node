@@ -1,7 +1,14 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { parseCookies } from "../auth";
 import { getUserIdFromToken, generateToken } from "../auth";
-import { verifyUser, getUsers, getUser } from "../db/user";
+import {
+  verifyUser,
+  getUsers,
+  getUser,
+  createUser,
+  userExists,
+} from "../db/user";
+import { validateUsername, validatePassword } from "../db/validation";
 import { parseBody } from "./helperMethods";
 
 export async function users(
@@ -30,7 +37,6 @@ export async function users(
     } else {
       return res.writeHead(200).end(JSON.stringify(currentUser));
     }
-    // res.writeHead(200).end("login ok");
   } catch (error) {
     console.log(error);
     return res.writeHead(401).end("authorization failed");
@@ -65,5 +71,72 @@ export async function login(
         "content-type": "Application/json",
       })
       .end(JSON.stringify({ error: "logowanie nieudane" }));
+  }
+}
+
+export async function register(
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+) {
+  try {
+    const newUserObjectFromForm = (await parseBody(req)) as {
+      username: string;
+      password: string;
+    };
+    const { username, password } = newUserObjectFromForm;
+    console.log("New user data:", username, password);
+
+    if (!validateUsername(username) || !validatePassword(password))
+      return res.writeHead(400).end(
+        JSON.stringify({
+          error: "walidacja nazwy użytkownika lub hasła niepomyślna",
+        })
+      );
+
+    if (await userExists(username))
+      return res.writeHead(400).end(
+        JSON.stringify({
+          error: `nazwa użytkownika ${username} zajęta`,
+        })
+      );
+
+    if (await createUser(username, password, "user")) return res.writeHead(201);
+    //       .end(
+    //         JSON.stringify({ message: `Utworzono użytkownika ${username}` })
+    //       );
+
+    // req.on("data", (chunk) => (body += chunk));
+    // req.on("end", async () => {
+    //   registerObject = await JSON.parse(body);
+    //   const { username, password } = registerObject;
+    //   // two same validation functions here for simplicity of testing
+    //   if (!validateUsername(username) || !validateUsername(password)) {
+    //     return res
+    //       .writeHead(401)
+    //       .end(JSON.stringify({ error: "walidacja niepomyślna" }));
+    //   }
+
+    //   if (await userExists(username))
+    //     return res
+    //       .writeHead(401)
+    //       .end(
+    //         JSON.stringify({ error: `użytkownik ${username} już istnieje` })
+    //       );
+
+    //   if (await addUser(username, password))
+    //     return res
+    //       .writeHead(201)
+    //       .end(
+    //         JSON.stringify({ message: `Utworzono użytkownika ${username}` })
+    //       );
+    //   else
+    //     return res
+    //       .writeHead(401)
+    //       .end(
+    //         JSON.stringify({ error: "Błąd przy tworzeniu nowego uzytkownika" })
+    //       );
+    // });
+  } catch (error) {
+    console.log(error);
   }
 }

@@ -4,7 +4,7 @@ import path, { dirname } from "path";
 import url from "url";
 
 import { getStaticFile, staticPaths } from "./routes/staticFiles";
-import { users, login } from "./routes/users";
+import { users, login, register } from "./routes/users";
 
 const PORT = 3000;
 
@@ -24,8 +24,8 @@ const server = createServer(async (req, res) => {
   // login form
   if (method === "POST" && pathName === "/login") login(req, res);
 
-  // //register new user
-  // if (method === "POST" && pathName === "/register") register(req, res);
+  //register new user
+  if (method === "POST" && pathName === "/register") register(req, res);
 
   // //update existing user
   // if (method === "PUT" && pathName?.startsWith("/users/"))

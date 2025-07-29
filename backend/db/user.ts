@@ -1,8 +1,9 @@
 // this file probably needs to be smartly renamed
 // to avoid confusion with routes/users.ts
 
-import { PublicUser, User } from "../types";
+import { PublicUser, User, UserRole, ProductType } from "../types";
 import path from "path";
+import bcrypt from "bcrypt";
 
 import fs from "fs/promises";
 
@@ -20,7 +21,63 @@ export async function verifyUser(
   return foundUser?.id;
 }
 
-// READ for User
+export async function createUser(
+  newUserUsername: string,
+  newUserPassword: string,
+  newUserRole: UserRole
+): Promise<boolean> {
+  try {
+    const newUserId = await generateId(newUserUsername, newUserRole);
+    if (
+      await !writeUser(newUserId, newUserUsername, newUserPassword, newUserRole)
+    )
+      throw new Error("unable to write new user");
+    console.log("New user id:", newUserId);
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
+
+async function writeUser(
+  id: string,
+  username: string,
+  password: string,
+  role: UserRole
+): Promise<boolean> {
+  try {
+    const usersArray = await getUsers();
+    if (usersArray === null)
+      throw new Error("users data not available in writeUser()");
+
+    const newUser: User = {
+      id: id,
+      username: username,
+      password: password,
+      role: role,
+      balance: 0,
+    };
+    const updatedUsersArray = [...usersArray, newUser];
+    if (await !writeDataArray<User>(updatedUsersArray))
+      throw new Error("unable to write users in writeUser()");
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
+
+async function writeDataArray<T>(dataArray: T[]): Promise<boolean> {
+  try {
+    await fs.writeFile(pathToUsers, Buffer.from(JSON.stringify(dataArray)));
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
+
+// READ all Users
 export async function getUsers(): Promise<User[] | null> {
   try {
     const usersArray = await getDataArray<User>(pathToUsers);
@@ -30,6 +87,19 @@ export async function getUsers(): Promise<User[] | null> {
     console.log(error);
     return null;
   }
+}
+
+export async function userExists(username: string): Promise<boolean> {
+  try {
+    const usersArray = await getUsers();
+    if (usersArray === null)
+      throw new Error("users data not available in userExists()");
+    if (usersArray.find((user) => user.username === username) !== undefined)
+      return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
 }
 
 // READ single User
@@ -69,4 +139,17 @@ async function getDataArray<T>(path: string): Promise<T[] | null> {
     console.log(error);
     return null;
   }
+}
+
+// === helper functions (private) ===
+// maybe move to separate module
+
+async function generateId(
+  username: string,
+  role: UserRole | ProductType
+): Promise<string> {
+  const hashed = await bcrypt.hash(`${username}${role}`, 10);
+  const id = `${role}${hashed.slice(0, 6)}`;
+  console.log(id);
+  return id;
 }
