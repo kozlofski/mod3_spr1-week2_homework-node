@@ -14,15 +14,22 @@
     "balance": 1000
   },
   {
-    "id": "user$2b$10",
-    "username": "user222",
+    "id": "userPwUWF6",
+    "username": "user230",
     "password": "dupadupa",
     "role": "user",
     "balance": 0
   },
   {
-    "id": "user$2b$10",
-    "username": "user223",
+    "id": "usernSvc92",
+    "username": "user231",
+    "password": "dupadupa",
+    "role": "user",
+    "balance": 0
+  },
+  {
+    "id": "user-GU5Kue",
+    "username": "user232",
     "password": "dupadupa",
     "role": "user",
     "balance": 0

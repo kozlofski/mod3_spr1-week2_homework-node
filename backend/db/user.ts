@@ -32,7 +32,7 @@ export async function createUser(
       await !writeUser(newUserId, newUserUsername, newUserPassword, newUserRole)
     )
       throw new Error("unable to write new user");
-    console.log("New user id:", newUserId);
+    return true;
   } catch (error) {
     console.log(error);
   }
@@ -149,7 +149,7 @@ async function generateId(
   role: UserRole | ProductType
 ): Promise<string> {
   const hashed = await bcrypt.hash(`${username}${role}`, 10);
-  const id = `${role}${hashed.slice(0, 6)}`;
+  const id = `${role}-${hashed.slice(-6)}`;
   console.log(id);
   return id;
 }

@@ -53,6 +53,9 @@ export async function login(
       password: string;
     };
     const { username, password } = loginObjectFromForm;
+
+    console.log("Trying to login:", username, password);
+
     const loggedUserId = await verifyUser(username, password);
 
     if (loggedUserId === undefined) throw new Error("logowanie nieudane");
@@ -100,10 +103,10 @@ export async function register(
         })
       );
 
-    if (await createUser(username, password, "user")) return res.writeHead(201);
-    //       .end(
-    //         JSON.stringify({ message: `Utworzono użytkownika ${username}` })
-    //       );
+    if (await createUser(username, password, "user"))
+      return res
+        .writeHead(201)
+        .end(JSON.stringify({ message: `Utworzono użytkownika ${username}` }));
 
     // req.on("data", (chunk) => (body += chunk));
     // req.on("end", async () => {
