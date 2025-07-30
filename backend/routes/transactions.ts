@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { parseCookies } from "../auth";
+import { authenticateAndReturnUser, parseCookies } from "../auth";
 import { getUserIdFromToken } from "../auth";
 import { getUser } from "../db/user";
 import { carExists, carIsAvailable, getCar } from "../db/car";
@@ -11,19 +11,7 @@ export async function buyCar(
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
-    const cookies = parseCookies(req);
-    if (cookies === null) throw new Error("cookies empty");
-
-    const token = cookies.token;
-    if (token === undefined) throw new Error("no token");
-
-    console.log("token: ", token);
-    const currentUserId = getUserIdFromToken(token);
-
-    console.log("User got from token: ", currentUserId);
-    const currentUser = await getUser(currentUserId);
-    console.log("Current user: ", currentUser);
-    if (currentUser === undefined) throw new Error("user not found");
+    const currentUser = await authenticateAndReturnUser(req, res);
     if (currentUser === null) throw new Error("unable to get user data");
 
     const carId = pathName.slice(6, -4);
