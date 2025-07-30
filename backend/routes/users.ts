@@ -1,5 +1,9 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { authenticateAndReturnUser, parseCookies } from "../auth";
+import {
+  authenticateAndReturnUser,
+  parseCookies,
+  setAuthCookie,
+} from "../auth";
 import { getUserIdFromToken, generateToken } from "../auth";
 import {
   verifyUser,
@@ -10,7 +14,12 @@ import {
   updateUserInDB,
 } from "../db/user";
 import { validateUsername, validatePassword } from "../db/validation";
-import { parseBody } from "./helperMethods";
+import {
+  handleErrorResponse,
+  handleSuccessResponse,
+  parseBody,
+  writeToResponse,
+} from "./helperMethods";
 
 export async function users(
   req: IncomingMessage,
@@ -22,10 +31,12 @@ export async function users(
 
     if (currentUser.role === "admin") {
       const usersArray = await getUsers();
-      // handle null usersArray!
-      return res.writeHead(200).end(JSON.stringify(usersArray));
+      if (usersArray === null)
+        return handleErrorResponse("user data unavailable", res);
+
+      return writeToResponse(usersArray, res);
     } else {
-      return res.writeHead(200).end(JSON.stringify(currentUser));
+      return writeToResponse(currentUser, res);
     }
   } catch (error) {
     console.log(error);
@@ -43,27 +54,15 @@ export async function login(
       password: string;
     };
     const { username, password } = loginObjectFromForm;
-
-    console.log("Trying to login:", username, password);
-
     const loggedUserId = await verifyUser(username, password);
 
-    if (loggedUserId === undefined) throw new Error("logowanie nieudane");
+    if (loggedUserId === undefined)
+      return handleErrorResponse("login failed", res);
 
     const token = generateToken(loggedUserId);
-    return res
-      .writeHead(200, {
-        "Set-Cookie": `token=${token}; Path=/; HttpOnly`,
-        "content-type": "Application/json",
-      })
-      .end(JSON.stringify({ message: `użytkownik ${username} zalogowany` }));
+    return setAuthCookie(res, token);
   } catch (error) {
     console.log(error);
-    return res
-      .writeHead(401, {
-        "content-type": "Application/json",
-      })
-      .end(JSON.stringify({ error: "logowanie nieudane" }));
   }
 }
 
@@ -77,44 +76,32 @@ export async function register(
       password: string;
     };
     const { username, password } = newUserObjectFromForm;
-    console.log("New user data:", username, password);
 
     if (!validateUsername(username) || !validatePassword(password))
-      return res.writeHead(400).end(
-        JSON.stringify({
-          error: "walidacja nazwy użytkownika lub hasła niepomyślna",
-        })
-      );
+      return handleErrorResponse("validation error", res);
 
     if (await userExists(username))
-      return res.writeHead(400).end(
-        JSON.stringify({
-          error: `nazwa użytkownika ${username} zajęta`,
-        })
-      );
+      return handleErrorResponse("username taken", res);
 
-    if (await createUser(username, password, "user"))
-      return res
-        .writeHead(201)
-        .end(JSON.stringify({ message: `Utworzono użytkownika ${username}` }));
+    if (await !createUser(username, password, "user"))
+      return handleErrorResponse("server error; user wasn't created", res);
+
+    return handleSuccessResponse("user created", res);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function updateUser(
+export async function updateUsernameOrPassword(
   pathName: string,
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
     const userIdFromPath = pathName.slice(7);
-    console.log("Userid from path:", userIdFromPath);
     const currentUser = await authenticateAndReturnUser(req, res);
     if (currentUser === null)
-      return res
-        .writeHead(401, { "content-type": "Application/json" })
-        .end(JSON.stringify({ error: "authorization failed" }));
+      return handleErrorResponse("authorization failed", res);
 
     const updateUserObjectFromForm = (await parseBody(req)) as {
       username: string;
@@ -124,21 +111,13 @@ export async function updateUser(
     const { username: updatedUsername, password: updatedPassword } =
       updateUserObjectFromForm;
 
-    // when trying to update user with different id
-    // than of the logged user:
     if (currentUser.id !== userIdFromPath)
-      return res
-        .writeHead(403, { "content-type": "Application/json" })
-        .end(JSON.stringify({ error: "forbidden" }));
+      return handleErrorResponse("access forbidden", res);
 
     if (await !updateUserInDB(currentUser.id, updatedUsername, updatedPassword))
-      return res
-        .writeHead(500, { "content-type": "Application/json" })
-        .end(JSON.stringify({ error: "update failed" }));
+      return handleErrorResponse("internal server error", res);
 
-    return res
-      .writeHead(200, { "Content-type": "Application/json" })
-      .end(JSON.stringify({ success: "user updated" }));
+    return handleSuccessResponse("user updated", res);
   } catch (error) {
     console.log(error);
   }

@@ -44,7 +44,14 @@ export function getUserIdFromToken(token: string): string {
   return userPayload.id;
 }
 
-// export function setAuthCookie(res: ServerResponse, token: string) {}
+export function setAuthCookie(res: ServerResponse, token: string) {
+  res
+    .writeHead(200, {
+      "Set-Cookie": `token=${token}; Path=/; HttpOnly`,
+      "content-type": "Application/json",
+    })
+    .end(JSON.stringify({ message: `użytkownik zalogowany` }));
+}
 
 export function parseCookies(
   req: IncomingMessage

@@ -1,15 +1,1 @@
-[
-  {
-    "id": "car-Z2xa2G",
-    "model": "Opel Insignia",
-    "price": 100000,
-    "ownerId": null
-  },
-  {
-    "id": "car-De90he",
-    "model": "Opel Astra",
-    "price": 60000,
-    "ownerId": null
-  },
-  { "id": "car-7ix5Ma", "model": "Opel Adam", "price": 70000, "ownerId": null }
-]
+[{"id":"car-Z2xa2G","model":"Opel Insignia","price":100000,"ownerId":null},{"id":"car-De90he","model":"Opel Astra","price":60000,"ownerId":null},{"id":"car-7ix5Ma","model":"Opel Adam","price":70000,"ownerId":null},{"id":"car-Wy9UXe","model":"Opel Kadett","price":1000,"ownerId":null},{"id":"car-5KOWQa","model":"Opel Tigra","price":60000,"ownerId":null}]

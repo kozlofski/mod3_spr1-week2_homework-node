@@ -2,7 +2,12 @@ import { createServer } from "http";
 import url from "url";
 
 import { getStaticFile, staticPaths } from "./routes/staticFiles";
-import { users, login, register, updateUser } from "./routes/users";
+import {
+  users,
+  login,
+  register,
+  updateUsernameOrPassword,
+} from "./routes/users";
 import { addCar, cars } from "./routes/cars";
 import { buyCar } from "./routes/transactions";
 
@@ -29,7 +34,7 @@ const server = createServer(async (req, res) => {
 
   //update existing user
   if (method === "PUT" && pathName?.startsWith("/users/"))
-    updateUser(pathName, req, res);
+    updateUsernameOrPassword(pathName, req, res);
 
   // adding a new car
   if (method === "POST" && pathName === "/cars") addCar(req, res);
