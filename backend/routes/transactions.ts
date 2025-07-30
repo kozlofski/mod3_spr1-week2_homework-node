@@ -9,7 +9,7 @@ export async function buyCar(
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
-    const currentUser = await authenticateAndReturnUser(req, res);
+    const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("access forbidden", res);
 

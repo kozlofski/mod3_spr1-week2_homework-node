@@ -18,7 +18,7 @@ export async function users(
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
-    const currentUser = await authenticateAndReturnUser(req, res);
+    const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null) throw new Error("unable to get user data");
 
     if (currentUser.role === "admin") {
@@ -91,7 +91,7 @@ export async function updateUsernameOrPassword(
 ) {
   try {
     const userIdFromPath = pathName.slice(7);
-    const currentUser = await authenticateAndReturnUser(req, res);
+    const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
 

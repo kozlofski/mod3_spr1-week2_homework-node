@@ -6,8 +6,7 @@ import { getUser } from "./db/user";
 const SECRET = process.env.SECRET as string;
 
 export async function authenticateAndReturnUser(
-  req: IncomingMessage,
-  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+  req: IncomingMessage
 ): Promise<PublicUser | null> {
   try {
     const cookies = parseCookies(req);
