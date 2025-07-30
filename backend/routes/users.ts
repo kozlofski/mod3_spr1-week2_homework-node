@@ -1,25 +1,17 @@
 import { IncomingMessage, ServerResponse } from "http";
-import {
-  authenticateAndReturnUser,
-  parseCookies,
-  setAuthCookie,
-} from "../auth";
-import { getUserIdFromToken, generateToken } from "../auth";
+import { authenticateAndReturnUser, setAuthCookie } from "../auth";
+import { generateToken } from "../auth";
 import {
   verifyUser,
   getUsers,
-  getUser,
   createUser,
   userExists,
   updateUserInDB,
 } from "../db/user";
 import { validateUsername, validatePassword } from "../db/validation";
-import {
-  handleErrorResponse,
-  handleSuccessResponse,
-  parseBody,
-  writeToResponse,
-} from "./helperMethods";
+import { parseBody } from "./helperMethods";
+import { handleErrorResponse } from "./errorResponse";
+import { handleSuccessResponse, writeToResponse } from "./successResponse";
 
 export async function users(
   req: IncomingMessage,

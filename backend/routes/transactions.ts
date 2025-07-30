@@ -1,10 +1,7 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { authenticateAndReturnUser, parseCookies } from "../auth";
-import { getUserIdFromToken } from "../auth";
-import { getUser } from "../db/user";
-import { carExists, carIsAvailable, getCar } from "../db/car";
-import { Car } from "../types";
-import { handleErrorResponse } from "./helperMethods";
+import { authenticateAndReturnUser } from "../auth";
+import { handleErrorResponse } from "./errorResponse";
+import { getCar } from "../db/car";
 
 export async function buyCar(
   pathName: string,

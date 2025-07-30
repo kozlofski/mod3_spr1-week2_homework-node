@@ -1,12 +1,9 @@
 import { IncomingMessage, ServerResponse } from "http";
-import {
-  handleErrorResponse,
-  handleSuccessResponse,
-  parseBody,
-  writeToResponse,
-} from "./helperMethods";
+import { parseBody } from "./helperMethods";
 
 import { carModelExists, createCar, getCars } from "../db/car";
+import { handleErrorResponse } from "./errorResponse";
+import { handleSuccessResponse, writeToResponse } from "./successResponse";
 
 export async function addCar(
   req: IncomingMessage,
