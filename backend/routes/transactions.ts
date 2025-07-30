@@ -12,7 +12,11 @@ export async function buyCar(
 ) {
   try {
     const currentUser = await authenticateAndReturnUser(req, res);
-    if (currentUser === null) throw new Error("unable to get user data");
+    if (currentUser === null)
+      return res
+        .writeHead(401, { "content-type": "Application/json" })
+        .end(JSON.stringify({ error: "authorization failed" }));
+    // maybe better: 403 forbidden ?
 
     const carId = pathName.slice(6, -4);
     console.log("buy car with id:", carId);
@@ -45,9 +49,8 @@ export async function buyCar(
         })
       );
 
-    // }
+    // to finish update balance, update car owner
   } catch (error) {
     console.log(error);
-    return res.writeHead(401).end("authorization failed");
   }
 }

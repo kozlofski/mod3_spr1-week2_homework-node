@@ -16,10 +16,10 @@ export async function authenticateAndReturnUser(
     const token = cookies.token;
     if (token === undefined) throw new Error("no token");
 
-    console.log("token: ", token);
+    // console.log("token: ", token);
     const currentUserId = getUserIdFromToken(token);
 
-    console.log("User got from token: ", currentUserId);
+    // console.log("User got from token: ", currentUserId);
     const currentUser = await getUser(currentUserId);
 
     if (currentUser === undefined) throw new Error("user not found");

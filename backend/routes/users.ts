@@ -7,6 +7,7 @@ import {
   getUser,
   createUser,
   userExists,
+  updateUserInDB,
 } from "../db/user";
 import { validateUsername, validatePassword } from "../db/validation";
 import { parseBody } from "./helperMethods";
@@ -21,6 +22,7 @@ export async function users(
 
     if (currentUser.role === "admin") {
       const usersArray = await getUsers();
+      // handle null usersArray!
       return res.writeHead(200).end(JSON.stringify(usersArray));
     } else {
       return res.writeHead(200).end(JSON.stringify(currentUser));
@@ -95,6 +97,48 @@ export async function register(
       return res
         .writeHead(201)
         .end(JSON.stringify({ message: `Utworzono użytkownika ${username}` }));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateUser(
+  pathName: string,
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+) {
+  try {
+    const userIdFromPath = pathName.slice(7);
+    console.log("Userid from path:", userIdFromPath);
+    const currentUser = await authenticateAndReturnUser(req, res);
+    if (currentUser === null)
+      return res
+        .writeHead(401, { "content-type": "Application/json" })
+        .end(JSON.stringify({ error: "authorization failed" }));
+
+    const updateUserObjectFromForm = (await parseBody(req)) as {
+      username: string;
+      password: string;
+    };
+
+    const { username: updatedUsername, password: updatedPassword } =
+      updateUserObjectFromForm;
+
+    // when trying to update user with different id
+    // than of the logged user:
+    if (currentUser.id !== userIdFromPath)
+      return res
+        .writeHead(403, { "content-type": "Application/json" })
+        .end(JSON.stringify({ error: "forbidden" }));
+
+    if (await !updateUserInDB(currentUser.id, updatedUsername, updatedPassword))
+      return res
+        .writeHead(500, { "content-type": "Application/json" })
+        .end(JSON.stringify({ error: "update failed" }));
+
+    return res
+      .writeHead(200, { "Content-type": "Application/json" })
+      .end(JSON.stringify({ success: "user updated" }));
   } catch (error) {
     console.log(error);
   }

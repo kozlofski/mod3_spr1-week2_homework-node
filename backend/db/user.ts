@@ -116,7 +116,38 @@ export async function getUser(
   }
 }
 
-// export async function updateUser(
+export async function updateUserInDB(
+  id: string,
+  updatedUsername: string,
+  updatedPassword: string
+): Promise<boolean> {
+  try {
+    const usersArray = await getUsers();
+    if (usersArray === null)
+      throw new Error("users data not available in writeUser()");
+
+    const updatedUsersArray = usersArray.map((user) => {
+      if (user.id === id) {
+        const updatedUser: User = {
+          id: user.id,
+          username: updatedUsername,
+          password: updatedPassword,
+          role: user.role,
+          balance: user.balance,
+        };
+        return updatedUser;
+      } else return user;
+    });
+    console.log("Updated users", updatedUsersArray);
+
+    if (await !writeDataArray<User>(pathToUsers, updatedUsersArray))
+      throw new Error("unable to write users in writeUser()");
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
 
 // )
 
