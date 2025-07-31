@@ -123,6 +123,7 @@ async function loadProfile() {
  * Ładuje listę samochodów i wyświetla je w sekcji #cars-list.
  */
 async function loadCars() {
+  console.log("LOAD CARS");
   try {
     const res = await fetch("http://localhost:3000/cars");
     if (res.status === 200) {
