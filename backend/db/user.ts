@@ -3,7 +3,7 @@
 
 import { PublicUser, User, UserRole, ProductType } from "../types";
 import path from "path";
-import bcrypt from "bcrypt";
+import { generateId } from "./helperMethods";
 
 import { getDataArray, writeDataArray } from "./jsondb";
 
@@ -141,7 +141,6 @@ export async function updateUserInDB(
         return updatedUser;
       } else return user;
     });
-    // console.log("Updated users", updatedUsersArray);
 
     if (await !writeDataArray<User>(pathToUsers, updatedUsersArray))
       throw new Error("unable to write users in updateUserInDB()");
@@ -150,19 +149,4 @@ export async function updateUserInDB(
     console.log(error);
   }
   return false;
-}
-
-// )
-
-// === helper functions (private) ===
-// maybe move to separate module
-
-async function generateId(
-  username: string,
-  role: UserRole | ProductType
-): Promise<string> {
-  const hashed = await bcrypt.hash(`${username}${role}`, 10);
-  const id = `${role}-${hashed.slice(-6)}`;
-  console.log(id);
-  return id;
 }

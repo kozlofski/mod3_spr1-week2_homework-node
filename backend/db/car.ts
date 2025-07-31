@@ -4,7 +4,7 @@
 import { ProductType, Car } from "../types";
 import { UserRole } from "../types";
 import path from "path";
-import bcrypt from "bcrypt";
+import { generateId } from "./helperMethods";
 
 import { getDataArray, writeDataArray } from "./jsondb";
 
@@ -153,17 +153,4 @@ export async function updateCarInDB(
     console.log(error);
   }
   return false;
-}
-
-// // === helper functions (private) ===
-
-// maybe move to separate module
-async function generateId(
-  username: string,
-  role: UserRole | ProductType
-): Promise<string> {
-  const hashed = await bcrypt.hash(`${username}${role}`, 10);
-  const id = `${role}-${hashed.slice(-6)}`;
-  console.log(id);
-  return id;
 }
