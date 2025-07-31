@@ -15,10 +15,8 @@ export async function authenticateAndReturnUser(
     const token = cookies.token;
     if (token === undefined) throw new Error("no token");
 
-    // console.log("token: ", token);
     const currentUserId = getUserIdFromToken(token);
 
-    // console.log("User got from token: ", currentUserId);
     const currentUser = await getUser(currentUserId);
 
     if (currentUser === undefined) throw new Error("user not found");
@@ -39,7 +37,6 @@ export function generateToken(userId: string): string {
 export function getUserIdFromToken(token: string): string {
   type userIdPayload = JwtPayload & { id: string };
   const userPayload = jwt.verify(token, SECRET) as userIdPayload;
-  console.log("Verify token: ", userPayload);
   return userPayload.id;
 }
 
@@ -62,7 +59,6 @@ export function parseCookies(
 
   for (const cookieString of cookiesArray) {
     const [key, value] = cookieString.split("=");
-    // console.log(key, value);
     cookiesObject[key] = value;
   }
 

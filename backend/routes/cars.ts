@@ -55,7 +55,6 @@ export async function updatePriceOrUser(
 ) {
   try {
     const carIdFromPath = pathName.slice(6);
-    console.log("Car id: ", carIdFromPath);
 
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)

@@ -140,11 +140,9 @@ export async function updateCarInDB(
           price: updatedPrice === undefined ? car.price : updatedPrice,
           ownerId: updatedUserId === undefined ? car.ownerId : updatedUserId,
         };
-        console.log("Updated car:", updatedCar);
         return updatedCar;
       } else return car;
     });
-    // console.log("Updated cars", updatedCarsArray);
 
     if (await !writeDataArray<Car>(pathToCars, updatedCarsArray))
       throw new Error("unable to write cars in updateCarInDB()");

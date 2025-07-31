@@ -7,6 +7,5 @@ export async function generateId(
 ): Promise<string> {
   const hashed = await bcrypt.hash(`${name}${dataType}`, 10);
   const id = `${dataType}-${hashed.slice(-6)}`;
-  console.log(id);
   return id;
 }
