@@ -26,7 +26,7 @@ export function handleSuccessResponse(
       successMessage = "dane samochodu zaktualizowane";
       break;
     case "car created":
-      statusCode = 200;
+      statusCode = 201;
       successMessage = "dodano nowy samochód do bazy";
       break;
     case "transaction successful":
