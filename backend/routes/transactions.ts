@@ -4,6 +4,10 @@ import { handleErrorResponse } from "./errorResponse";
 import { getCar, updateCarInDB } from "../db/car";
 import { updateUserInDB } from "../db/user";
 import { handleSuccessResponse } from "./successResponse";
+import { EventEmitter } from "events";
+import { handleSSE } from "./sse";
+
+export const transactionEventBus = new EventEmitter();
 
 export async function buyCar(
   pathName: string,
@@ -32,9 +36,9 @@ export async function buyCar(
       return handleErrorResponse("not enough money", res);
     const newUserBalance = userBalance - carPrice;
 
-    // next two operations should be a transaction -
-    // error in updating user balance should rollback updating car info
-    // can be easily done in a proper DB
+    // next two operations should together be inside a transaction -
+    // error in updating user balance should rollback updated car owner
+    // but it can be easily done in a proper DBMS
     if (await !updateCarInDB(carId, undefined, currentUser.id))
       return handleErrorResponse("internal server error", res);
 
@@ -48,8 +52,15 @@ export async function buyCar(
     )
       return handleErrorResponse("internal server error", res);
 
+    const sseEventData = {
+      event: "car-bought",
+      carId: carId,
+      buyerId: currentUser.id,
+    };
+
+    handleSSE("car bought", sseEventData);
+
     return handleSuccessResponse("transaction successful", res);
-    // to finish update balance, update car owner
   } catch (error) {
     console.log(error);
   }

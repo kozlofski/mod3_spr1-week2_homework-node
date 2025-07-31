@@ -52,7 +52,8 @@ export async function login(
       return handleErrorResponse("login failed", res);
 
     const token = generateToken(loggedUserId);
-    return setAuthCookie(res, token);
+    if (!setAuthCookie(res, token))
+      handleErrorResponse("internal server error", res);
   } catch (error) {
     console.log(error);
   }

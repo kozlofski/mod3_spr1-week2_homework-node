@@ -40,13 +40,19 @@ export function getUserIdFromToken(token: string): string {
   return userPayload.id;
 }
 
-export function setAuthCookie(res: ServerResponse, token: string) {
-  res
-    .writeHead(200, {
-      "Set-Cookie": `token=${token}; Path=/; HttpOnly`,
-      "content-type": "Application/json",
-    })
-    .end(JSON.stringify({ message: `użytkownik zalogowany` }));
+export function setAuthCookie(res: ServerResponse, token: string): boolean {
+  try {
+    res
+      .writeHead(200, {
+        "Set-Cookie": `token=${token}; Path=/; HttpOnly`,
+        "content-type": "Application/json",
+      })
+      .end(JSON.stringify({ message: `użytkownik zalogowany` }));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 export function parseCookies(

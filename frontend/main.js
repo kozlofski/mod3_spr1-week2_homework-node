@@ -300,9 +300,11 @@ function route() {
  * Ustawia nasłuchiwanie Server-Sent Events, które wyświetlają powiadomienia o zdarzeniach (np. zakupie samochodu).
  */
 function setupSSE() {
+  console.log("SETUP SSE in frontend");
   const evtSource = new EventSource("/sse");
   evtSource.onmessage = (event) => {
     const msg = JSON.parse(event.data);
+    console.log("MSG: ", msg);
     showNotification(
       `SSE: ${msg.event} - Car ID: ${msg.carId}, Buyer ID: ${msg.buyerId}`
     );

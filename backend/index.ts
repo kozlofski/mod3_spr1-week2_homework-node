@@ -10,6 +10,7 @@ import {
 } from "./routes/users";
 import { addCar, cars, updatePriceOrUser } from "./routes/cars";
 import { buyCar } from "./routes/transactions";
+import { setupSSE } from "./routes/sse";
 
 const PORT = 3000;
 
@@ -49,6 +50,9 @@ const server = createServer(async (req, res) => {
     pathName.endsWith("/buy")
   )
     buyCar(pathName, req, res);
+
+  // server-side events
+  if (req.url === "/sse") setupSSE(req, res);
 
   // update car
   if (method === "PUT" && pathName?.startsWith("/cars/"))

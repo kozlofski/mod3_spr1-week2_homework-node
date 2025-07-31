@@ -20,6 +20,6 @@ export async function writeDataArray<T>(
     return true;
   } catch (error) {
     console.log(error);
+    return false;
   }
-  return false;
 }

@@ -53,3 +53,5 @@ export type ResponsePayload =
   | User[]
   | string
   | Record<string, string | number>;
+
+export type SSEEvent = "car bought";
