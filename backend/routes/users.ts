@@ -106,7 +106,14 @@ export async function updateUsernameOrPassword(
     if (currentUser.id !== userIdFromPath)
       return handleErrorResponse("access forbidden", res);
 
-    if (await !updateUserInDB(currentUser.id, updatedUsername, updatedPassword))
+    if (
+      await !updateUserInDB(
+        currentUser.id,
+        updatedUsername,
+        updatedPassword,
+        undefined
+      )
+    )
       return handleErrorResponse("internal server error", res);
 
     return handleSuccessResponse("user updated", res);

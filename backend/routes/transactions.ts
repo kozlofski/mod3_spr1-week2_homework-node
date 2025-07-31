@@ -1,7 +1,9 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { authenticateAndReturnUser } from "../auth";
 import { handleErrorResponse } from "./errorResponse";
-import { getCar } from "../db/car";
+import { getCar, updateCarInDB } from "../db/car";
+import { updateUserInDB } from "../db/user";
+import { handleSuccessResponse } from "./successResponse";
 
 export async function buyCar(
   pathName: string,
@@ -26,8 +28,27 @@ export async function buyCar(
     const carPrice = car.price;
     const userBalance = currentUser.balance;
 
-    if (carPrice > userBalance) handleErrorResponse("not enough money", res);
+    if (carPrice > userBalance)
+      return handleErrorResponse("not enough money", res);
+    const newUserBalance = userBalance - carPrice;
 
+    // next two operations should be a transaction -
+    // error in updating user balance should rollback updating car info
+    // can be easily done in a proper DB
+    if (await !updateCarInDB(carId, undefined, currentUser.id))
+      return handleErrorResponse("internal server error", res);
+
+    if (
+      await !updateUserInDB(
+        currentUser.id,
+        undefined,
+        undefined,
+        newUserBalance
+      )
+    )
+      return handleErrorResponse("internal server error", res);
+
+    return handleSuccessResponse("transaction successful", res);
     // to finish update balance, update car owner
   } catch (error) {
     console.log(error);

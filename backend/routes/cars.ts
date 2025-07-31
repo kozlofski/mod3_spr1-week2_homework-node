@@ -1,9 +1,10 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { parseBody } from "./helperMethods";
 
-import { carModelExists, createCar, getCars } from "../db/car";
+import { carModelExists, createCar, getCars, updateCarInDB } from "../db/car";
 import { handleErrorResponse } from "./errorResponse";
 import { handleSuccessResponse, writeToResponse } from "./successResponse";
+import { authenticateAndReturnUser } from "../auth";
 
 export async function addCar(
   req: IncomingMessage,
@@ -33,11 +34,48 @@ export async function cars(
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
+    const currentUser = await authenticateAndReturnUser(req);
+    if (currentUser === null)
+      return handleErrorResponse("authorization failed", res);
+
     const carsArray = await getCars();
     if (carsArray === null)
       return handleErrorResponse("car data unavailable", res);
 
     return writeToResponse(carsArray, res);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updatePriceOrUser(
+  pathName: string,
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+) {
+  try {
+    const carIdFromPath = pathName.slice(6);
+    console.log("Car id: ", carIdFromPath);
+
+    const currentUser = await authenticateAndReturnUser(req);
+    if (currentUser === null)
+      return handleErrorResponse("authorization failed", res);
+
+    if (currentUser.role !== "admin")
+      return handleErrorResponse("access forbidden", res);
+
+    const updateCarObjectFromForm = (await parseBody(req)) as {
+      price: number;
+      userId: string;
+    };
+
+    const { price: updatedPrice, userId: updatedUserId } =
+      updateCarObjectFromForm;
+
+    if (await !updateCarInDB(carIdFromPath, updatedPrice, updatedUserId))
+      return handleErrorResponse("internal server error", res);
+
+    return handleSuccessResponse("car updated", res);
   } catch (error) {
     console.log(error);
   }

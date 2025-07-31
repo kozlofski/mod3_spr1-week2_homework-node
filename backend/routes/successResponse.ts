@@ -21,6 +21,10 @@ export function handleSuccessResponse(
       statusCode = 200;
       successMessage = "dane użytkownika zaktualizowane";
       break;
+    case "car updated":
+      statusCode = 200;
+      successMessage = "dane samochodu zaktualizowane";
+      break;
     case "car created":
       statusCode = 200;
       successMessage = "dodano nowy samochód do bazy";

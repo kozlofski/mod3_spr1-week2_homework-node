@@ -12,3 +12,19 @@ Podział na pliki wynika z wyróznienia kilku wartstw komunikacji frontendu z ba
 2. /routes (users.ts, cars.ts) - warstwa wywołująca logowanie, obsługująca walidacje, obsługująca i przetwarzająca requesty, wysyłająca odpowiednie response'y (Controller we wzorcu MVC?)
 3. /db - warstwa ogarniająca prawidłową komunikację z bazą danych, tzn. przygotowanie prawidłowego formatu zapisanych danych i wywołująca właściwą, "niskopoziomową" metodę zapisu danych z warstwy 4.
 4. /db/jsondb.ts - plik zawierający metody najniższego poziomu. Warstwę tę wydzieliłem po to, żeby łatwo było podmienić metodę zapisu danych - w przyszłości pewnie będzie to baza postgresql
+
+## Logika CRUD dla usera i samochodu w zależności od uprawnień usera
+
+zwykły user może
+
+1. Updateować własny username i hasło, może usunąć własne konto
+2. Kupić samochód
+
+admin może:
+
+1. usunąć usera
+2. pełny CRUD dla samochodu
+
+admin NIE powinien:
+
+1. móc zmieniać username i password dla usera

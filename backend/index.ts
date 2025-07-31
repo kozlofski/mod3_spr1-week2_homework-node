@@ -8,7 +8,7 @@ import {
   register,
   updateUsernameOrPassword,
 } from "./routes/users";
-import { addCar, cars } from "./routes/cars";
+import { addCar, cars, updatePriceOrUser } from "./routes/cars";
 import { buyCar } from "./routes/transactions";
 
 const PORT = 3000;
@@ -49,6 +49,10 @@ const server = createServer(async (req, res) => {
     pathName.endsWith("/buy")
   )
     buyCar(pathName, req, res);
+
+  // update car
+  if (method === "PUT" && pathName?.startsWith("/cars/"))
+    updatePriceOrUser(pathName, req, res);
 });
 
 server.listen(PORT, () => {

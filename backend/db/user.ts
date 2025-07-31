@@ -118,8 +118,9 @@ export async function getUser(
 
 export async function updateUserInDB(
   id: string,
-  updatedUsername: string,
-  updatedPassword: string
+  updatedUsername: string | undefined,
+  updatedPassword: string | undefined,
+  updatedBalance: number | undefined
 ): Promise<boolean> {
   try {
     const usersArray = await getUsers();
@@ -130,18 +131,20 @@ export async function updateUserInDB(
       if (user.id === id) {
         const updatedUser: User = {
           id: user.id,
-          username: updatedUsername,
-          password: updatedPassword,
+          username:
+            updatedUsername === undefined ? user.username : updatedUsername,
+          password:
+            updatedPassword === undefined ? user.password : updatedPassword,
           role: user.role,
-          balance: user.balance,
+          balance: updatedBalance === undefined ? user.balance : updatedBalance,
         };
         return updatedUser;
       } else return user;
     });
-    console.log("Updated users", updatedUsersArray);
+    // console.log("Updated users", updatedUsersArray);
 
     if (await !writeDataArray<User>(pathToUsers, updatedUsersArray))
-      throw new Error("unable to write users in writeUser()");
+      throw new Error("unable to write users in updateUserInDB()");
     return true;
   } catch (error) {
     console.log(error);

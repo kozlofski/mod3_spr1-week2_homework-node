@@ -112,7 +112,7 @@ export async function getCar(carId: string): Promise<Car | undefined | null> {
     const carsArray = await getDataArray<Car>(pathToCars);
     if (!carsArray) throw new Error("cars data not available");
 
-    const car = carsArray.find((car) => car.id === `car-${carId}`);
+    const car = carsArray.find((car) => car.id === carId);
     if (car === undefined) return undefined;
 
     return car;
@@ -120,6 +120,39 @@ export async function getCar(carId: string): Promise<Car | undefined | null> {
     console.log(error);
     return null;
   }
+}
+
+export async function updateCarInDB(
+  carId: string,
+  updatedPrice: number | undefined,
+  updatedUserId: string | null | undefined
+): Promise<boolean> {
+  try {
+    const carsArray = await getCars();
+    if (carsArray === null)
+      throw new Error("cars data not available in writeUser()");
+
+    const updatedCarsArray = carsArray.map((car) => {
+      if (car.id === carId) {
+        const updatedCar: Car = {
+          id: car.id,
+          model: car.model,
+          price: updatedPrice === undefined ? car.price : updatedPrice,
+          ownerId: updatedUserId === undefined ? car.ownerId : updatedUserId,
+        };
+        console.log("Updated car:", updatedCar);
+        return updatedCar;
+      } else return car;
+    });
+    // console.log("Updated cars", updatedCarsArray);
+
+    if (await !writeDataArray<Car>(pathToCars, updatedCarsArray))
+      throw new Error("unable to write cars in updateCarInDB()");
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
 }
 
 // // === helper functions (private) ===
