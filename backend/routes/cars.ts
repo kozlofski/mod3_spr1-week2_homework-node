@@ -5,7 +5,7 @@ import { addCar, getCars, editCar, removeCar, carModelExists } from "../db/car";
 import { parseBody } from "./helperMethods";
 import { handleErrorResponse } from "./errorResponse";
 import { handleSuccessResponse, writeToResponse } from "./successResponse";
-import { authenticateAndReturnUser } from "../auth";
+import { authenticateAndReturnUser, setAuthCookie } from "../auth";
 
 // CREATE
 export async function createCar(
@@ -16,6 +16,7 @@ export async function createCar(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     if (currentUser.role !== "admin")
       return handleErrorResponse("access forbidden", res);
@@ -47,6 +48,7 @@ export async function cars(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     const carsArray = await getCars();
     if (carsArray === null)
@@ -68,6 +70,7 @@ export async function updatePriceOrUser(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     if (currentUser.role !== "admin")
       return handleErrorResponse("access forbidden", res);
@@ -100,6 +103,7 @@ export async function deleteCar(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     if (currentUser.role !== "admin")
       return handleErrorResponse("access forbidden", res);

@@ -10,7 +10,6 @@ import {
 } from "../db/user";
 
 import { authenticateAndReturnUser, setAuthCookie } from "../auth";
-import { generateToken } from "../auth";
 import { validateUsername, validatePassword } from "../db/validation";
 import { parseBody } from "./helperMethods";
 import { handleErrorResponse } from "./errorResponse";
@@ -50,6 +49,7 @@ export async function users(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     if (currentUser.role === "admin") {
       const usersArray = await getUsers();
@@ -74,6 +74,7 @@ export async function deleteUser(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     const userIdFromPath = pathName.slice(7);
     if (!(currentUser.role === "admin" || currentUser.id === userIdFromPath))
@@ -97,6 +98,7 @@ export async function updateUsernameOrPassword(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
 
     const userIdFromPath = pathName.slice(7);
     if (currentUser.id !== userIdFromPath)
@@ -141,9 +143,11 @@ export async function login(
     if (loggedUserId === undefined)
       return handleErrorResponse("login failed", res);
 
-    const token = generateToken(loggedUserId);
-    if (!setAuthCookie(res, token))
+    // const token = generateToken(loggedUserId);
+    if (!setAuthCookie(res, loggedUserId))
       handleErrorResponse("internal server error", res);
+
+    handleSuccessResponse("login successful", res);
   } catch (error) {
     console.log(error);
   }

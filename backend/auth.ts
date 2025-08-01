@@ -29,8 +29,8 @@ export async function authenticateAndReturnUser(
   }
 }
 
-export function generateToken(userId: string): string {
-  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: "10m" });
+function generateToken(userId: string): string {
+  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: "1m" });
   return token;
 }
 
@@ -40,14 +40,10 @@ export function getUserIdFromToken(token: string): string {
   return userPayload.id;
 }
 
-export function setAuthCookie(res: ServerResponse, token: string): boolean {
+export function setAuthCookie(res: ServerResponse, userId: string): boolean {
   try {
-    res
-      .writeHead(200, {
-        "Set-Cookie": `token=${token}; Path=/; HttpOnly`,
-        "content-type": "Application/json",
-      })
-      .end(JSON.stringify({ message: `użytkownik zalogowany` }));
+    const token = generateToken(userId);
+    res.setHeader("Set-Cookie", [`token=${token}; Path=/; HttpOnly`]);
     return true;
   } catch (error) {
     console.log(error);

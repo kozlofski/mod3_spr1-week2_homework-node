@@ -1,10 +1,11 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { authenticateAndReturnUser } from "../auth";
+import { EventEmitter } from "events";
+
+import { authenticateAndReturnUser, setAuthCookie } from "../auth";
 import { handleErrorResponse } from "./errorResponse";
+import { handleSuccessResponse } from "./successResponse";
 import { getCar, editCar } from "../db/car";
 import { editUser } from "../db/user";
-import { handleSuccessResponse } from "./successResponse";
-import { EventEmitter } from "events";
 import { handleSSE } from "./sse";
 
 export const transactionEventBus = new EventEmitter();
@@ -18,6 +19,7 @@ export async function buyCar(
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("access forbidden", res);
+    setAuthCookie(res, currentUser.id);
 
     const carId = pathName.slice(6, -4);
 

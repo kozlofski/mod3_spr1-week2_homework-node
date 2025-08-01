@@ -1,9 +1,1 @@
-[
-  {
-    "id": "car-14M0jK",
-    "model": "Audi A6",
-    "price": 200000,
-    "ownerId": "admin001"
-  },
-  { "id": "car-1AAFoS", "model": "BMW M6", "price": 100001, "ownerId": null }
-]
+[{"id":"car-14M0jK","model":"Audi A6","price":200000,"ownerId":"admin001"},{"id":"car-1AAFoS","model":"BMW M6","price":100001,"ownerId":null},{"id":"car-XUCy1u","model":"Alfa Romeo Giulia","price":300000,"ownerId":null}]
