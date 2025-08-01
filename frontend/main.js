@@ -287,6 +287,8 @@ function route() {
     return;
   }
 
+  checkAuth();
+
   showView(viewId);
   if (viewId === "profile-view") {
     loadProfile();
