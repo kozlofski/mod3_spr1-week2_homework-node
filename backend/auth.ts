@@ -30,7 +30,7 @@ export async function authenticateAndReturnUser(
 }
 
 function generateToken(userId: string): string {
-  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: "1m" });
+  const token = jwt.sign({ id: userId }, SECRET, { expiresIn: "10m" });
   return token;
 }
 

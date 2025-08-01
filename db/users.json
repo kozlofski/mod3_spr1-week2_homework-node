@@ -1,9 +1,1 @@
-[
-  {
-    "id": "admin001",
-    "username": "admin",
-    "password": "admin123",
-    "role": "admin",
-    "balance": 292000
-  }
-]
+[{"id":"admin001","username":"admin","password":"admin123","role":"admin","balance":292000},{"id":"user-/3e5hO","username":"user","password":"dupa","role":"user","balance":0}]
