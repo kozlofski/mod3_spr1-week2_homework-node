@@ -141,6 +141,8 @@ async function loadCars() {
         });
       }
       document.getElementById("cars-list").innerHTML = html;
+    } else {
+      document.getElementById("cars-list").innerHTML = "";
     }
   } catch (err) {
     showMessage("Błąd przy pobieraniu samochodów", "error");

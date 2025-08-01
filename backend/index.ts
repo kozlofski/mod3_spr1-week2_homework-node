@@ -8,6 +8,7 @@ import {
   register,
   updateUsernameOrPassword,
   deleteUser,
+  hackBalance,
 } from "./routes/users";
 import { createCar, cars, deleteCar, updatePriceOrUser } from "./routes/cars";
 import { buyCar } from "./routes/transactions";
@@ -69,6 +70,9 @@ const server = createServer(async (req, res) => {
 
   // server-side events
   if (req.url === "/sse") setupSSE(req, res);
+
+  // hacking balance
+  if (req.url === "/gumowa-kaczka" && pathName) hackBalance(pathName, req, res);
 });
 
 server.listen(PORT, () => {

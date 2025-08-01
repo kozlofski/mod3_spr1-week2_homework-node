@@ -152,3 +152,26 @@ export async function login(
     console.log(error);
   }
 }
+
+// secret hack for adding milion zeta to user balance
+export async function hackBalance(
+  pathName: string,
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage>
+) {
+  try {
+    const currentUser = await authenticateAndReturnUser(req);
+    if (currentUser === null)
+      return handleErrorResponse("authorization failed", res);
+    setAuthCookie(res, currentUser.id);
+
+    const newUserBalance = currentUser.balance + 1000000;
+
+    if (await !editUser(currentUser.id, undefined, undefined, newUserBalance))
+      return handleErrorResponse("internal server error", res);
+
+    return handleSuccessResponse("user updated", res);
+  } catch (error) {
+    console.log(error);
+  }
+}
