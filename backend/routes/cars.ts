@@ -1,7 +1,13 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { parseBody } from "./helperMethods";
 
-import { carModelExists, createCar, getCars, updateCarInDB } from "../db/car";
+import {
+  carModelExists,
+  createCar,
+  deleteCarFromDB,
+  getCars,
+  updateCarInDB,
+} from "../db/car";
 import { handleErrorResponse } from "./errorResponse";
 import { handleSuccessResponse, writeToResponse } from "./successResponse";
 import { authenticateAndReturnUser } from "../auth";
@@ -82,6 +88,30 @@ export async function updatePriceOrUser(
       return handleErrorResponse("internal server error", res);
 
     return handleSuccessResponse("car updated", res);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteCar(
+  pathName: string,
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
+) {
+  try {
+    const currentUser = await authenticateAndReturnUser(req);
+    if (currentUser === null)
+      return handleErrorResponse("authorization failed", res);
+
+    if (currentUser.role !== "admin")
+      return handleErrorResponse("access forbidden", res);
+
+    const carIdFromPath = pathName.slice(6);
+
+    if (await !deleteCarFromDB(carIdFromPath))
+      return handleErrorResponse("internal server error", res);
+
+    return handleSuccessResponse("car deleted", res);
   } catch (error) {
     console.log(error);
   }

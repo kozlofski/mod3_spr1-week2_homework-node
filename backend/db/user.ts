@@ -67,6 +67,26 @@ async function writeUser(
   return false;
 }
 
+export async function deleteUserFromDB(userId: string): Promise<boolean> {
+  try {
+    const usersArray = await getUsers();
+    if (usersArray === null)
+      throw new Error("users data not available in deleteUser()");
+
+    const updatedUsersArray = usersArray.filter((user) => user.id !== userId);
+
+    if (updatedUsersArray.length === 0)
+      throw new Error("can't delete last user - probably admin's account");
+
+    if (await !writeDataArray<User>(pathToUsers, updatedUsersArray))
+      throw new Error("unable to write users in writeUser()");
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 // READ all Users
 export async function getUsers(): Promise<User[] | null> {
   try {

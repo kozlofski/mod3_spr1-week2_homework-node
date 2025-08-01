@@ -39,8 +39,10 @@ export type SuccessToResponse =
   | "login successful"
   | "user created"
   | "user updated"
+  | "user deleted"
   | "car created"
   | "car updated"
+  | "car deleted"
   | "transaction successful";
 
 export type ErrorToBackend =

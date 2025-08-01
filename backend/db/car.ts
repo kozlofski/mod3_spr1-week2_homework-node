@@ -152,3 +152,20 @@ export async function updateCarInDB(
   }
   return false;
 }
+
+export async function deleteCarFromDB(carId: string): Promise<boolean> {
+  try {
+    const carsArray = await getCars();
+    if (carsArray === null)
+      throw new Error("cars data not available in deleteCar()");
+
+    const updatedCarsArray = carsArray.filter((car) => car.id !== carId);
+
+    if (await !writeDataArray<Car>(pathToCars, updatedCarsArray))
+      throw new Error("unable to write cars in writeCar()");
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}

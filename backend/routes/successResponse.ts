@@ -21,6 +21,10 @@ export function handleSuccessResponse(
       statusCode = 200;
       successMessage = "dane użytkownika zaktualizowane";
       break;
+    case "user deleted":
+      statusCode = 200;
+      successMessage = "użytkownik usunięty";
+      break;
     case "car updated":
       statusCode = 200;
       successMessage = "dane samochodu zaktualizowane";
@@ -28,6 +32,10 @@ export function handleSuccessResponse(
     case "car created":
       statusCode = 201;
       successMessage = "dodano nowy samochód do bazy";
+      break;
+    case "car deleted":
+      statusCode = 200;
+      successMessage = "samochód usunięty";
       break;
     case "transaction successful":
       statusCode = 200;

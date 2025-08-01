@@ -7,8 +7,9 @@ import {
   login,
   register,
   updateUsernameOrPassword,
+  deleteUser,
 } from "./routes/users";
-import { addCar, cars, updatePriceOrUser } from "./routes/cars";
+import { addCar, cars, deleteCar, updatePriceOrUser } from "./routes/cars";
 import { buyCar } from "./routes/transactions";
 import { setupSSE } from "./routes/sse";
 
@@ -24,25 +25,40 @@ const server = createServer(async (req, res) => {
   if (method === "GET" && pathName && staticPaths.includes(pathName))
     getStaticFile(pathName, res);
 
-  // users
+  // === CRUD for users ===
+  // CREATE (register) new user
+  if (method === "POST" && pathName === "/register") register(req, res);
+
+  // READ users
   if (method === "GET" && pathName === "/users") users(req, res);
+
+  // UPDATE existing user
+  if (method === "PUT" && pathName?.startsWith("/users/"))
+    updateUsernameOrPassword(pathName, req, res);
+
+  // DELETE existing user
+  if (method === "DELETE" && pathName?.startsWith("/users/"))
+    deleteUser(pathName, req, res);
 
   // login form
   if (method === "POST" && pathName === "/login") login(req, res);
 
-  //register new user
-  if (method === "POST" && pathName === "/register") register(req, res);
-
-  //update existing user
-  if (method === "PUT" && pathName?.startsWith("/users/"))
-    updateUsernameOrPassword(pathName, req, res);
-
-  // adding a new car
+  // === CRUD for cars ===
+  // CREATE a new car
   if (method === "POST" && pathName === "/cars") addCar(req, res);
 
-  // get cars
+  // READ cars
   if (method === "GET" && pathName === "/cars") cars(req, res);
 
+  // UPDATE car
+  if (method === "PUT" && pathName?.startsWith("/cars/"))
+    updatePriceOrUser(pathName, req, res);
+
+  // DELETE car
+  if (method === "DELETE" && pathName?.startsWith("/cars/"))
+    deleteCar(pathName, req, res);
+
+  // === TRANSACTIONS ===
   // buy a car
   if (
     method === "POST" &&
@@ -53,10 +69,6 @@ const server = createServer(async (req, res) => {
 
   // server-side events
   if (req.url === "/sse") setupSSE(req, res);
-
-  // update car
-  if (method === "PUT" && pathName?.startsWith("/cars/"))
-    updatePriceOrUser(pathName, req, res);
 });
 
 server.listen(PORT, () => {
