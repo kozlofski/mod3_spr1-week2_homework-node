@@ -5,7 +5,7 @@ export function validateUsername(username: string): boolean {
 }
 
 export function validatePassword(password: string): boolean {
-  // should contain big and small letters, a symbol and a number
+  // password should contain big and small letters, a symbol and a number
   // minimum 8 characters long
   const passRegex = new RegExp(
     /(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$])[a-zA-Z0-9!?$]{8,}/g

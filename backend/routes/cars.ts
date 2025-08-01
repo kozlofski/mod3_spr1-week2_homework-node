@@ -11,6 +11,13 @@ export async function addCar(
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
+    const currentUser = await authenticateAndReturnUser(req);
+    if (currentUser === null)
+      return handleErrorResponse("authorization failed", res);
+
+    if (currentUser.role !== "admin")
+      return handleErrorResponse("access forbidden", res);
+
     const newCarObjectFromForm = (await parseBody(req)) as {
       model: string;
       price: string;
@@ -54,14 +61,14 @@ export async function updatePriceOrUser(
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
   try {
-    const carIdFromPath = pathName.slice(6);
-
     const currentUser = await authenticateAndReturnUser(req);
     if (currentUser === null)
       return handleErrorResponse("authorization failed", res);
 
     if (currentUser.role !== "admin")
       return handleErrorResponse("access forbidden", res);
+
+    const carIdFromPath = pathName.slice(6);
 
     const updateCarObjectFromForm = (await parseBody(req)) as {
       price: number;

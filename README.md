@@ -3,6 +3,7 @@
 1. Czy proponowany podział na abstrakcje jest sensowny?
 2. Większość z metod (szczególnie w katalogu `/routes`), rzuca kilka rodzajów błędów. Czy zaproponowany przeze mnie sposób, tzn. wydzielenie obsługi błędów do osobnego pliku jest dobrą praktyką? Czy najlepiej radzić sobie z nimi w bloku `try` i od razu rzucać responsy, czy lepiej jednak rzucać błędy a w bloku `catch` stworzyć jakąś rozbudowaną instrukcję warunkową działającą w zależności od np. `error.message`?
 3. Czy warto poszukać algorytmu produkującego krótsze hashe, czy wystarczy ucinać hash? Np. jako generator suffixu w ajdikach. [problem ten zapewne zniknie, gdy użyjemy prawdziwej BD z automatycznym `primary key`]
+4. Czy hashowanie hasła lepiej przeprowadzać po stronie frontendu, żeby nie przesyłać hasła siecią? Czy sprawę załatwia `https` i jednak po stronie backendu hashujemy?
 
 ## Koncepcja podziału na pliki i katalogi
 

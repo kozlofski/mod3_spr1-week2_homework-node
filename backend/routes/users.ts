@@ -19,7 +19,8 @@ export async function users(
 ) {
   try {
     const currentUser = await authenticateAndReturnUser(req);
-    if (currentUser === null) throw new Error("unable to get user data");
+    if (currentUser === null)
+      return handleErrorResponse("authorization failed", res);
 
     if (currentUser.role === "admin") {
       const usersArray = await getUsers();
@@ -32,7 +33,6 @@ export async function users(
     }
   } catch (error) {
     console.log(error);
-    return res.writeHead(401).end("authorization failed");
   }
 }
 
