@@ -289,13 +289,13 @@ function route() {
     return;
   }
 
-  checkAuth();
-
   showView(viewId);
   if (viewId === "profile-view") {
+    checkAuth();
     loadProfile();
   }
   if (viewId === "cars-view") {
+    checkAuth();
     loadCars();
   }
 }
