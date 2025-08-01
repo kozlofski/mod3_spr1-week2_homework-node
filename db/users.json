@@ -4,13 +4,13 @@
     "username": "admin",
     "password": "admin123",
     "role": "admin",
-    "balance": 10000
+    "balance": 300000
   },
   {
-    "id": "user-DqxSRi",
-    "username": "user11",
-    "password": "dupa123",
+    "id": "user-KwtOu6",
+    "username": "user2",
+    "password": "dupa",
     "role": "user",
-    "balance": 73618773
+    "balance": 0
   }
 ]

@@ -123,7 +123,6 @@ async function loadProfile() {
  * Ładuje listę samochodów i wyświetla je w sekcji #cars-list.
  */
 async function loadCars() {
-  console.log("LOAD CARS");
   try {
     const res = await fetch("http://localhost:3000/cars");
     if (res.status === 200) {
@@ -301,7 +300,6 @@ function route() {
  * Ustawia nasłuchiwanie Server-Sent Events, które wyświetlają powiadomienia o zdarzeniach (np. zakupie samochodu).
  */
 function setupSSE() {
-  console.log("SETUP SSE in frontend");
   const evtSource = new EventSource("/sse");
   evtSource.onmessage = (event) => {
     const msg = JSON.parse(event.data);

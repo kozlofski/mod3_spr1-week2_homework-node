@@ -1,14 +1,16 @@
 import { IncomingMessage, ServerResponse } from "http";
+
+import {
+  createUser,
+  getUsers,
+  editUser,
+  removeUser,
+  verifyUser,
+  userExists,
+} from "../db/user";
+
 import { authenticateAndReturnUser, setAuthCookie } from "../auth";
 import { generateToken } from "../auth";
-import {
-  verifyUser,
-  getUsers,
-  createUser,
-  userExists,
-  updateUserInDB,
-  deleteUserFromDB,
-} from "../db/user";
 import { validateUsername, validatePassword } from "../db/validation";
 import { parseBody } from "./helperMethods";
 import { handleErrorResponse } from "./errorResponse";
@@ -77,7 +79,7 @@ export async function deleteUser(
     if (!(currentUser.role === "admin" || currentUser.id === userIdFromPath))
       return handleErrorResponse("access forbidden", res);
 
-    if (await !deleteUserFromDB(userIdFromPath))
+    if (await !removeUser(userIdFromPath))
       return handleErrorResponse("internal server error", res);
 
     return handleSuccessResponse("user deleted", res);
@@ -109,7 +111,7 @@ export async function updateUsernameOrPassword(
       updateUserObjectFromForm;
 
     if (
-      await !updateUserInDB(
+      await !editUser(
         currentUser.id,
         updatedUsername,
         updatedPassword,

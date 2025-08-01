@@ -9,7 +9,7 @@ import {
   updateUsernameOrPassword,
   deleteUser,
 } from "./routes/users";
-import { addCar, cars, deleteCar, updatePriceOrUser } from "./routes/cars";
+import { createCar, cars, deleteCar, updatePriceOrUser } from "./routes/cars";
 import { buyCar } from "./routes/transactions";
 import { setupSSE } from "./routes/sse";
 
@@ -45,7 +45,7 @@ const server = createServer(async (req, res) => {
 
   // === CRUD for cars ===
   // CREATE a new car
-  if (method === "POST" && pathName === "/cars") addCar(req, res);
+  if (method === "POST" && pathName === "/cars") createCar(req, res);
 
   // READ cars
   if (method === "GET" && pathName === "/cars") cars(req, res);

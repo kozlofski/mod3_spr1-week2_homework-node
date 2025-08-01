@@ -1,8 +1,8 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { authenticateAndReturnUser } from "../auth";
 import { handleErrorResponse } from "./errorResponse";
-import { getCar, updateCarInDB } from "../db/car";
-import { updateUserInDB } from "../db/user";
+import { getCar, editCar } from "../db/car";
+import { editUser } from "../db/user";
 import { handleSuccessResponse } from "./successResponse";
 import { EventEmitter } from "events";
 import { handleSSE } from "./sse";
@@ -39,17 +39,10 @@ export async function buyCar(
     // next two operations should together be inside a transaction -
     // error in updating user balance should rollback updated car owner
     // but it can be easily done in a proper DBMS
-    if (await !updateCarInDB(carId, undefined, currentUser.id))
+    if (await !editCar(carId, undefined, currentUser.id))
       return handleErrorResponse("internal server error", res);
 
-    if (
-      await !updateUserInDB(
-        currentUser.id,
-        undefined,
-        undefined,
-        newUserBalance
-      )
-    )
+    if (await !editUser(currentUser.id, undefined, undefined, newUserBalance))
       return handleErrorResponse("internal server error", res);
 
     const sseEventData = {

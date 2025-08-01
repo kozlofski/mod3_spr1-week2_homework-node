@@ -1,18 +1,14 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { parseBody } from "./helperMethods";
 
-import {
-  carModelExists,
-  createCar,
-  deleteCarFromDB,
-  getCars,
-  updateCarInDB,
-} from "../db/car";
+import { addCar, getCars, editCar, removeCar, carModelExists } from "../db/car";
+
+import { parseBody } from "./helperMethods";
 import { handleErrorResponse } from "./errorResponse";
 import { handleSuccessResponse, writeToResponse } from "./successResponse";
 import { authenticateAndReturnUser } from "../auth";
 
-export async function addCar(
+// CREATE
+export async function createCar(
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
 ) {
@@ -33,7 +29,7 @@ export async function addCar(
     if (await carModelExists(model))
       return handleErrorResponse("car model already exists", res);
 
-    if (await !createCar(model, price))
+    if (await !addCar(model, price))
       return handleErrorResponse("server error; car wasn't created", res);
 
     return handleSuccessResponse("car created", res);
@@ -42,6 +38,7 @@ export async function addCar(
   }
 }
 
+// READ
 export async function cars(
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage> & { req: IncomingMessage }
@@ -61,6 +58,7 @@ export async function cars(
   }
 }
 
+// UPDATE
 export async function updatePriceOrUser(
   pathName: string,
   req: IncomingMessage,
@@ -84,7 +82,7 @@ export async function updatePriceOrUser(
     const { price: updatedPrice, userId: updatedUserId } =
       updateCarObjectFromForm;
 
-    if (await !updateCarInDB(carIdFromPath, updatedPrice, updatedUserId))
+    if (await !editCar(carIdFromPath, updatedPrice, updatedUserId))
       return handleErrorResponse("internal server error", res);
 
     return handleSuccessResponse("car updated", res);
@@ -108,7 +106,7 @@ export async function deleteCar(
 
     const carIdFromPath = pathName.slice(6);
 
-    if (await !deleteCarFromDB(carIdFromPath))
+    if (await !removeCar(carIdFromPath))
       return handleErrorResponse("internal server error", res);
 
     return handleSuccessResponse("car deleted", res);
