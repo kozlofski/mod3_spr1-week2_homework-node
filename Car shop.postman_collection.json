@@ -1,0 +1,255 @@
+{
+  "info": {
+    "_postman_id": "4ea81ee5-5ba4-4ae6-a491-2ef09cc29a9d",
+    "name": "Car shop",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15486405"
+  },
+  "item": [
+    {
+      "name": "root",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": [""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CREATE (register) user2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"user101\",\n    \"password\": \"pass123\"\n}  ",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login user1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"user101\",\n    \"password\": \"pass123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login admin",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "READ all Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/users",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UPDATE User",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"user101\",\n    \"password\": \"pass1234\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/users/<ID_HERE>",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "<ID_HERE>"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE user",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model\": \"Opel Insignia\",\n    \"price\": \"160000\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/users/user-lxOSHi",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "user-lxOSHi"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CREATE (add) new Car",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model\": \"Porsche Boxter\",\n    \"price\": \"60000\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/cars",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["cars"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "READ (get) all Cars",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"model\": \"Opel Astra\",\n    \"price\": \"60000\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/cars",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["cars"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UPDATE Car",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"price\": 100001,\n    \"userId\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/cars/car-1AAFoS",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["cars", "car-1AAFoS"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE car",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/cars/car-2DeMC6",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["cars", "car-2DeMC6"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buy a Car",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/cars/car-Z2xa2G/buy",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["cars", "car-Z2xa2G", "buy"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

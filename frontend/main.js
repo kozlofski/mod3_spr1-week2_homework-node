@@ -141,6 +141,8 @@ async function loadCars() {
         });
       }
       document.getElementById("cars-list").innerHTML = html;
+    } else {
+      document.getElementById("cars-list").innerHTML = "";
     }
   } catch (err) {
     showMessage("Błąd przy pobieraniu samochodów", "error");
@@ -289,9 +291,11 @@ function route() {
 
   showView(viewId);
   if (viewId === "profile-view") {
+    checkAuth();
     loadProfile();
   }
   if (viewId === "cars-view") {
+    checkAuth();
     loadCars();
   }
 }
@@ -303,6 +307,7 @@ function setupSSE() {
   const evtSource = new EventSource("/sse");
   evtSource.onmessage = (event) => {
     const msg = JSON.parse(event.data);
+    console.log("MSG: ", msg);
     showNotification(
       `SSE: ${msg.event} - Car ID: ${msg.carId}, Buyer ID: ${msg.buyerId}`
     );
