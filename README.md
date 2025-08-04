@@ -1,18 +1,19 @@
 ## Pytania po wykonaniu projektu
 
-1. Czy proponowany podział na abstrakcje jest sensowny?
+1. Czy proponowany przeze mnie podział na abstrakcje jest sensowny?
 2. Większość z metod (szczególnie w katalogu `/routes`), rzuca kilka rodzajów błędów. Czy zaproponowany przeze mnie sposób, tzn. wydzielenie obsługi błędów do osobnego pliku jest dobrą praktyką? Czy najlepiej radzić sobie z nimi w bloku `try` i od razu rzucać responsy, czy lepiej jednak rzucać błędy a w bloku `catch` stworzyć jakąś rozbudowaną instrukcję warunkową działającą w zależności od np. `error.message`?
-3. Czy warto poszukać algorytmu produkującego krótsze hashe, czy wystarczy ucinać hash? Np. jako generator suffixu w ajdikach. [problem ten zapewne zniknie, gdy użyjemy prawdziwej BD z automatycznym `primary key`]
+3. Czy warto poszukać algorytmu produkującego krótsze hashe, czy akceptowalne jest ucinanie hashy - tak jak ja to roboczo zrobiłem? (mam świadomość, że hash staje się mniej niepowtarzalny i raczej jest to praktyka nie-produkcyjna, więc pewnie sam sobie odpowiedziałem) Np. jako generator suffixu w ajdikach. [problem ten zapewne zniknie, gdy użyjemy prawdziwej BD z automatycznym `primary key`]
 4. Czy hashowanie hasła lepiej przeprowadzać po stronie frontendu, żeby nie przesyłać hasła siecią? Czy sprawę załatwia `https` i jednak po stronie backendu hashujemy?
+5. Czy i w jakim zakresie warto uczyć się (jako developerzy) pisania testów, jednostkowych, ale też np. funkcjonalnych w Postmanie? Jakie narzędzia najlepsze są do testowania aplikacji Node'owych? Podczas pisania aplikacji wielokrotnie miałem wrażenie, że mimo że Postman przyspiesza pracę, to przeklikiwanie się ręczne przez zapytania w postmanie (np. przez kilka zapytań w określonej sekwencji) jest mało efektywne i fajnie byłoby odpalić jedną komendą sekwencję testów
 
 ## Koncepcja podziału na pliki i katalogi
 
-Podział na pliki wynika z wyróznienia kilku wartstw komunikacji frontendu z bazą danych:
+Podział mojego projektu na pliki wynika z wyróznienia kilku wartstw komunikacji frontendu z bazą danych:
 
-1. index.ts - warstwa rozdzielająca ruch, uruchamiająca odpowiednią logikę w zależności od endpointu
-2. /routes (users.ts, cars.ts) - warstwa wywołująca logowanie, obsługująca walidacje, obsługująca i przetwarzająca requesty, wysyłająca odpowiednie response'y (Controller we wzorcu MVC?)
-3. /db - warstwa ogarniająca prawidłową komunikację z bazą danych, tzn. przygotowanie prawidłowego formatu zapisanych danych i wywołująca właściwą, "niskopoziomową" metodę zapisu danych z warstwy 4.
-4. /db/jsondb.ts - plik zawierający metody odczytu i zapisu najniższego poziomu, operujące na systemie plików. Warstwę tę wydzieliłem po to, żeby łatwo było podmienić metodę zapisu danych - w przyszłości pewnie będzie to baza postgresql. W wyższej warstwie wystarczy podmienić funkcję lub sam import. Ważne, żeby interfejs metody się zgadzał.
+1. index.ts - warstwa rozdzielająca ruch, uruchamiająca odpowiednią logikę w zależności od endpointu (tu jest routing)
+2. /routes (users.ts, cars.ts) - warstwa wywołująca logowanie, obsługująca walidacje, obsługująca i przetwarzająca requesty, wysyłająca odpowiednie response'y (Controller we wzorcu MVC?) (pewnie ten plik już nie powinien nazywac się `routes`, bo routing jest w pliku `index.ts`?)
+3. /db - warstwa ogarniająca prawidłową komunikację z bazą danych, tzn. przygotowanie prawidłowego formatu zapisanych danych i wywołująca właściwą, "niskopoziomową" metodę zapisu danych z warstwy 4. Nazwy metod różnią się od tych z poziomu wyżej dla uniknięcia konfliktów nazw, ale pewnie można było to zrobić bardziej elegancko
+4. /db/jsondb.ts - plik zawierający metody odczytu i zapisu najniższego poziomu, operujące na systemie plików. Warstwę tę wydzieliłem po to, żeby łatwo było podmienić metodę zapisu danych - w przyszłości pewnie będzie to baza postgresql. W wyższej warstwie wystarczy podmienić taką funkcję lub sam import. Ważne, żeby interfejs metody się zgadzał.
 
 ## Logika CRUD dla usera i samochodu w zależności od uprawnień usera
 
@@ -29,3 +30,7 @@ admin może:
 admin NIE powinien:
 
 1. móc zmieniać username i password dla usera
+
+## Inne uwagi
+
+Z pośpiechu już nie zaimplementowałem hashowania hasła. Chciałem skupić się na porządku w kodzie
