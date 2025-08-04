@@ -33,4 +33,6 @@ admin NIE powinien:
 
 ## Inne uwagi
 
+Uderzenie do endpointu `/gumowa-kaczka` doda milion monet do aktualnie zalogowanego konta
+
 Z pośpiechu już nie zaimplementowałem hashowania hasła. Chciałem skupić się na porządku w kodzie
